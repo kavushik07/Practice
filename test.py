@@ -356,6 +356,26 @@ print("Dot Product:", search("data", docs, vocab, tfidf_matrix, idf, 'dot'))
 # Term-Document Boolean Model with File Input
 # -------------------------------
 import re
+import os
+# Path to folder containing files
+folder_path = "documents_folder"
+
+docs = []
+
+# Step 0: Read all files in folder
+for filename in os.listdir(folder_path):
+    if filename.endswith(".txt"):  # only process text files
+        with open(os.path.join(folder_path, filename), "r") as f:
+            text = f.read().strip()
+            
+            # Case 1: file has docs separated by newlines
+            if "\n" in text:
+                file_docs = [line.strip() for line in text.splitlines() if line.strip()]
+            else:
+                # Case 2: file has docs separated by double spaces
+                file_docs = re.split(r"\s{2,}", text)
+
+            docs.extend(file_docs)  # add to global list
 
 with open("documents.txt", "r") as f:
     text = f.read().strip()
@@ -540,3 +560,4 @@ print("Result:", search("cat and bird and dog"))
 
 print("\nOR optimization:")
 print("Optimized order (OR):", optimize_terms(terms, "or"))
+
